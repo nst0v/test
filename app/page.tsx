@@ -356,6 +356,7 @@ export default function Home() {
   const wheelTimer = useRef<number | null>(null);
   const countdownTimer = useRef<number | null>(null);
   const promoInput = useRef<HTMLInputElement | null>(null);
+  const rouletteStage = useRef<HTMLDivElement | null>(null);
 
   const clearWheelTimers = () => {
     if (wheelTimer.current !== null) {
@@ -470,6 +471,15 @@ export default function Home() {
     setDateResult(null);
     setSpinSeconds(15);
     setIsSpinning(true);
+
+    window.requestAnimationFrame(() => {
+      rouletteStage.current?.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "auto"
+          : "smooth",
+        block: "start",
+      });
+    });
 
     const startedAt = Date.now();
     countdownTimer.current = window.setInterval(() => {
@@ -947,7 +957,11 @@ export default function Home() {
             </section>
 
             {rouletteReady && (
-              <div className="roulette-stage" aria-live="polite">
+              <div
+                ref={rouletteStage}
+                className="roulette-stage"
+                aria-live="polite"
+              >
                 <div className="wheel-area">
                   <div className="wheel-pointer" aria-hidden="true">
                     <span>▼</span>
@@ -1030,11 +1044,11 @@ export default function Home() {
                     </div>
                     <a
                       className="telegram-link"
-                      href={`https://t.me/share/url?url=&text=${telegramText}`}
+                      href={`https://t.me/kikisolda?text=${telegramText}`}
                       target="_blank"
                       rel="noreferrer"
                     >
-                      Отправить результат Никите <span aria-hidden="true">↗</span>
+                      Отправить Никите в @kikisolda <span aria-hidden="true">↗</span>
                     </a>
                   </div>
                 )}

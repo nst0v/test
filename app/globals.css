@@ -1578,6 +1578,7 @@ main {
 .roulette-stage {
   margin-top: 42px;
   padding-top: 42px;
+  scroll-margin-top: 22px;
   border-top: 1px solid var(--line);
   animation: modalReveal 480ms ease both;
 }
