@@ -37,4 +37,3 @@ npm run build
 - `public/assets` — 3D-котик и стикеры рулетки;
 - `public/nasa` — локальные оптимизированные копии снимков NASA;
 - `.github/workflows/deploy-pages.yml` — автоматическая публикация.
- 
