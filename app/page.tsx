@@ -142,27 +142,14 @@ const dateOptions = [
   },
 ] as const;
 
-function encodeTime(timestamp: number, length = 10) {
-  let value = timestamp;
-  let output = "";
-
-  for (let index = 0; index < length; index += 1) {
-    output = CROCKFORD[value % 32] + output;
-    value = Math.floor(value / 32);
-  }
-
-  return output;
-}
-
-function createUlid() {
-  const randomBytes = new Uint8Array(16);
+function createPromoCode() {
+  const randomBytes = new Uint8Array(8);
   window.crypto.getRandomValues(randomBytes);
-  const randomPart = Array.from(
+
+  return Array.from(
     randomBytes,
     (byte) => CROCKFORD[byte & 31],
   ).join("");
-
-  return `${encodeTime(Date.now())}${randomPart}`;
 }
 
 function ScratchCard({
@@ -436,7 +423,7 @@ export default function Home() {
   };
 
   const acceptDate = () => {
-    const code = createUlid();
+    const code = createPromoCode();
     clearWheelTimers();
     setNeedsTime(false);
     setDateCode(code);
@@ -502,8 +489,8 @@ export default function Home() {
   const unlockRoulette = () => {
     const normalizedCode = promoCode.trim().toUpperCase();
 
-    if (!/^[0-9A-HJKMNP-TV-Z]{26}$/.test(normalizedCode)) {
-      setPromoError("Проверь промокод: в нём должно быть 26 символов ULID.");
+    if (!/^[0-9A-HJKMNP-TV-Z]{8}$/.test(normalizedCode)) {
+      setPromoError("Проверь промокод: в нём должно быть 8 символов.");
       return;
     }
 
@@ -894,9 +881,9 @@ export default function Home() {
                   autoComplete="off"
                   autoCapitalize="characters"
                   spellCheck={false}
-                  maxLength={26}
+                  maxLength={8}
                   placeholder={
-                    scratchRevealed ? "26 символов со скретч-карты" : "Сначала открой код"
+                    scratchRevealed ? "8 символов со скретч-карты" : "Сначала открой код"
                   }
                   disabled={!scratchRevealed || isSpinning || Boolean(dateResult)}
                   aria-invalid={Boolean(promoError)}
@@ -924,7 +911,7 @@ export default function Home() {
               ) : (
                 <p className="promo-help" id="promo-help">
                   {scratchRevealed
-                    ? "Перепечатай код внимательно — буквы I, L, O и U в ULID не используются."
+                    ? "Перепечатай код внимательно — буквы I, L, O и U не используются."
                     : "Зажми мышку или палец и стирай слой понемногу."}
                 </p>
               )}
